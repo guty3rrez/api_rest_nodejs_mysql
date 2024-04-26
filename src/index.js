@@ -1,12 +1,18 @@
 const express = require('express');
 const app = express();
+const fs = require('fs');
+const https = require('https');
 let { procesarHorarios, existeHora, existeCliente } = require('./helpers');
 const { db } = require('./mysql');
 
 //Setting app
 app.set('port',3000)
-const TZ = 'America/Santiago'; // Zona horaria de Chile
 
+const options = {
+    key: fs.readFileSync('./key.pem'),
+    cert: fs.readFileSync('./cert.pem'),
+    passphrase: 'felipe'
+}
 
 //Middlewares
 app.use(express.json()); // Poder enviar y recibir JSON
@@ -79,7 +85,12 @@ app.post('/postHour', async (req,res) => {
 })
 
 
-//Levantando el servicio HTTP
-app.listen(app.get('port'), () => {
-    console.log(`Servidor iniciado en el puerto ${app.get('port')}`)
+https.createServer(options, app).listen(8000, () => {
+    console.log('Servidor corriendo en https://localhost:8000/')
 })
+
+
+// //Levantando el servicio HTTP
+// app.listen(app.get('port'), () => {
+//     console.log(`Servidor iniciado en el puerto ${app.get('port')}`)
+// })
