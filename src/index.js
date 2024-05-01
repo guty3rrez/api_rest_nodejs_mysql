@@ -4,10 +4,10 @@ const fs = require('fs');
 const https = require('https');
 let { procesarHorarios, existeHora, existeCliente } = require('./helpers');
 const { db } = require('./mysql');
-
+const { nuevoPago, confirmarPago } = require('./transbank');
 //Setting app
 app.set('port',3000)
-
+//Credenciales para https
 const options = {
     key: fs.readFileSync('./key.pem'),
     cert: fs.readFileSync('./cert.pem'),
@@ -84,13 +84,13 @@ app.post('/postHour', async (req,res) => {
     }
 })
 
+app.get('/nuevoPago',nuevoPago)
+
+
+app.use('/confirmarPago',confirmarPago)
+
 
 https.createServer(options, app).listen(8000, () => {
     console.log('Servidor corriendo en https://localhost:8000/')
 })
 
-
-// //Levantando el servicio HTTP
-// app.listen(app.get('port'), () => {
-//     console.log(`Servidor iniciado en el puerto ${app.get('port')}`)
-// })
