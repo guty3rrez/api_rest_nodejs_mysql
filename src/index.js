@@ -5,6 +5,7 @@ const https = require('https');
 let { procesarHorarios, existeHora, existeCliente } = require('./helpers');
 const { db } = require('./mysql');
 const { nuevoPago, confirmarPago } = require('./transbank');
+const { consultarEnvio, test, crearEnvio } = require("./chilexpress")
 //Setting app
 app.set('port',3000)
 //Credenciales para https
@@ -89,6 +90,11 @@ app.get('/nuevoPago',nuevoPago)
 
 app.use('/confirmarPago',confirmarPago)
 
+app.post("/consultarEnvio", consultarEnvio)
+
+app.get("/test", test)
+
+app.post("/crearEnvio", crearEnvio)
 
 https.createServer(options, app).listen(8000, () => {
     console.log('Servidor corriendo en https://localhost:8000/')
